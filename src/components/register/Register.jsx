@@ -94,7 +94,7 @@ const Register = () => {
       aliceBlueID: newuser.demat,
     };
     console.log(JSON.stringify(credentials));
-    fetch("http://127.0.0.1:8000/api/register/", {
+    fetch("http://192.168.29.214:8000/api/register/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),

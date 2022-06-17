@@ -11,7 +11,7 @@ const SuccessCard = ({ msg, current }) => {
   const handleEvent = () => {
     console.log("stop");
     const request = { username: current.data.username };
-    fetch("http://127.0.0.1:8000/api/stop/", {
+    fetch("http://192.168.29.214:8000/api/stop/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(request),

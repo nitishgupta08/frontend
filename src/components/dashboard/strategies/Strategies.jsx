@@ -6,7 +6,7 @@ function Strategies({ toggle, strategy }) {
   const [strategies, setStrategies] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/strategies/", {
+    fetch("http://192.168.29.214:8000/api/strategies/", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })

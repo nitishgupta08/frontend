@@ -42,7 +42,13 @@ function Profile() {
       </Typography>
       <Typography
         variant="h1"
-        sx={{ fontSize: "1.5rem", fontWeight: 500, mt: 1, ml: 2 }}>
+        style={{ wordWrap: "break-word" }}
+        sx={{
+          fontSize: "1.5rem",
+          fontWeight: 500,
+          mt: 1,
+          ml: 2,
+        }}>
         {current.data.email}
       </Typography>
       <Typography

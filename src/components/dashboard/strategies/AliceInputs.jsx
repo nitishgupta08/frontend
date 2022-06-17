@@ -64,7 +64,7 @@ const AliceInputs = ({ close, strategy, succ }) => {
     close();
     succ(true);
 
-    fetch("http://127.0.0.1:8000/api/postCred/", {
+    fetch("http://192.168.29.214:8000/api/postCred/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),
