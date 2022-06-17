@@ -7,11 +7,13 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
+import { BaseURL } from "../../../BaseURL";
+
 const SuccessCard = ({ msg, current }) => {
   const handleEvent = () => {
     console.log("stop");
     const request = { username: current.data.username };
-    fetch("http://192.168.29.214:8000/api/stop/", {
+    fetch(BaseURL + "api/stop/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(request),

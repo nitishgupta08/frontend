@@ -1,12 +1,13 @@
 import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import StrategiesCard from "./StrategiesCard";
+import { BaseURL } from "../../../BaseURL";
 
 function Strategies({ toggle, strategy }) {
   const [strategies, setStrategies] = useState([]);
 
   useEffect(() => {
-    fetch("http://192.168.29.214:8000/api/strategies/", {
+    fetch(BaseURL + "api/strategies/", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })

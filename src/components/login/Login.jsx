@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../UserContext";
+import { BaseURL } from "../../BaseURL";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -42,7 +43,7 @@ function Login() {
     }
 
     const credentials = { username: username, password: password };
-    fetch("http://192.168.29.214:8000/api/login/", {
+    fetch(BaseURL + "api/login/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),

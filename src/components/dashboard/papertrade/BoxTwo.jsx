@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { BaseURL } from "../../../BaseURL";
 
 function BoxTwo({ setPaperMoney }) {
   const [strategies, setStrategies] = useState([]);
@@ -35,7 +36,7 @@ function BoxTwo({ setPaperMoney }) {
   };
 
   useEffect(() => {
-    fetch("http://192.168.29.214:8000/api/strategies/", {
+    fetch(BaseURL + "api/strategies/", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -89,7 +90,7 @@ function BoxTwo({ setPaperMoney }) {
             sx={{ fontSize: "1rem", fontWeight: 400, ml: 2 }}>
             <ArrowForwardIcon />
           </Typography>
-          <TextField
+          {/* <TextField
             disabled={submit}
             required
             label="Amount you want to spend"
@@ -103,7 +104,7 @@ function BoxTwo({ setPaperMoney }) {
             variant="subtitle"
             sx={{ fontSize: "1rem", fontWeight: 400, ml: 2 }}>
             <ArrowForwardIcon />
-          </Typography>
+          </Typography> */}
           {!submit ? (
             <Button
               type="submit"

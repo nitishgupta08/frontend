@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import TOC from "../landing/TOC";
+import { BaseURL } from "../../BaseURL";
 
 const Register = () => {
   const [passerror, setPasserror] = useState(false);
@@ -94,7 +95,7 @@ const Register = () => {
       aliceBlueID: newuser.demat,
     };
     console.log(JSON.stringify(credentials));
-    fetch("http://192.168.29.214:8000/api/register/", {
+    fetch(BaseURL + "api/register/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),

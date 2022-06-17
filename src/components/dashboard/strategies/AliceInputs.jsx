@@ -13,6 +13,7 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "../../../UserContext";
 import { createFile } from "./createFile";
 import { execfile } from "./execFile";
+import { BaseURL } from "../../../BaseURL";
 
 // Tesey user globally. Send a response from backend yo update
 // isCredential value
@@ -64,7 +65,7 @@ const AliceInputs = ({ close, strategy, succ }) => {
     close();
     succ(true);
 
-    fetch("http://192.168.29.214:8000/api/postCred/", {
+    fetch(BaseURL + "api/postCred/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),

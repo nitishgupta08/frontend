@@ -5,7 +5,7 @@ import BoxTwo from "./BoxTwo";
 import BoxThree from "./BoxThree";
 
 function PaperTrade() {
-  const [paperMoney, setPaperMoney] = useState(0);
+  const [paperMoney, setPaperMoney] = useState(100000);
   return (
     <Box
       component="main"
