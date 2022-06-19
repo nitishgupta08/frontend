@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Typography,
   Select,
@@ -7,31 +7,51 @@ import {
   InputLabel,
   Box,
   Button,
-  TextField,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { BaseURL } from "../../../BaseURL";
+import { createFile } from "../strategies/createFile";
+import { UserContext } from "../../../UserContext";
 
-function BoxTwo({ setPaperMoney }) {
+function BoxTwo() {
   const [strategies, setStrategies] = useState([]);
-
   // dropdown states
-  const [current, setCurrent] = React.useState({ strategy: "", money: 0 });
+  const [strat, setStrat] = React.useState({ id: "", money: 0 });
   const handleChange = (event) => {
-    setCurrent({ ...current, strategy: event.target.value });
+    setStrat({ ...strat, id: event.target.value });
   };
 
+  const { user } = useContext(UserContext);
+  const current = JSON.parse(user);
   const [submit, setSubmit] = useState(false);
-  const handleSubmit = () => {
-    //https://stackoverflow.com/questions/16037165/displaying-a-number-in-indian-format-using-javascript
-    let x = current.money;
-    x = x.toString();
-    let lastThree = x.substring(x.length - 3);
-    let otherNumbers = x.substring(0, x.length - 3);
-    if (otherNumbers !== "") lastThree = "," + lastThree;
-    let res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
 
-    setPaperMoney(res);
+  const handleSubmit = () => {
+    createFile(strat, current);
+    setTimeout(execPaperTrade, 3000, current, setOpen);
+    setSubmit(!submit);
+  };
+
+  const handleStop = () => {
+    const request = { username: current.data.username };
+    fetch(BaseURL + "api/stop_trades/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    })
+      .then((response) => {
+        if (response.ok === true) return response.json();
+        else {
+          throw new Error();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     setSubmit(!submit);
   };
 
@@ -49,8 +69,21 @@ function BoxTwo({ setPaperMoney }) {
       .catch((error) => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const [open, setOpen] = useState(false);
+  const snackBarClose = () => {
+    setOpen(false);
+  };
   return (
     <>
+      <Snackbar
+        open={open}
+        autoHideDuration={5000}
+        onClose={snackBarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+        <Alert severity="success" variant="filled">
+          Papertrade has started. Please be patient for entries!
+        </Alert>
+      </Snackbar>
       <Box>
         <Typography
           variant="subtitle"
@@ -72,7 +105,7 @@ function BoxTwo({ setPaperMoney }) {
               sx={{ minWidth: 120 }}
               labelid="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
-              value={current.strategy}
+              value={strat.id}
               label="Strategy"
               autoWidth
               onChange={handleChange}>
@@ -126,7 +159,7 @@ function BoxTwo({ setPaperMoney }) {
                   color: "#ffff",
                 },
               }}
-              onClick={handleSubmit}>
+              onClick={handleStop}>
               Stop Execution
             </Button>
           )}
@@ -135,5 +168,27 @@ function BoxTwo({ setPaperMoney }) {
     </>
   );
 }
+
+const execPaperTrade = (current, setOpen) => {
+  const request = { username: current.data.username };
+  fetch(BaseURL + "api/paper_trade/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+  })
+    .then((response) => {
+      if (response.ok === true) return response.json();
+      else {
+        throw new Error();
+      }
+    })
+    .then((data) => {
+      setOpen(true);
+      console.log(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 export default BoxTwo;
