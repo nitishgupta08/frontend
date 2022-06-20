@@ -188,6 +188,7 @@ function Dashboard() {
             left: "9vw",
             height: "100vh",
             width: "92vw",
+            overflow: "scroll",
           }}>
           <Topbar toggle={handleToggle} drawer={openDrawer} />
           <Box component="section">

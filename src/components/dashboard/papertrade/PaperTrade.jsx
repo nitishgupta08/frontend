@@ -5,14 +5,25 @@ import BoxTwo from "./BoxTwo";
 import BoxThree from "./BoxThree";
 
 function PaperTrade() {
-  //https://stackoverflow.com/questions/16037165/displaying-a-number-in-indian-format-using-javascript
-  let x = 100000;
-  x = x.toString();
-  let lastThree = x.substring(x.length - 3);
-  let otherNumbers = x.substring(0, x.length - 3);
-  if (otherNumbers !== "") lastThree = "," + lastThree;
-  let res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
-  const [paperMoney, setPaperMoney] = useState(res);
+  const [paperMoney, setPaperMoney] = useState(0);
+
+  const updateMoney = (value) => {
+    //https://stackoverflow.com/questions/16037165/displaying-a-number-in-indian-format-using-javascript
+    let x = value;
+    x = x.toString();
+    var afterPoint = "";
+    if (x.indexOf(".") > 0) afterPoint = x.substring(x.indexOf("."), x.length);
+    x = Math.floor(x);
+    x = x.toString();
+    var lastThree = x.substring(x.length - 3);
+    var otherNumbers = x.substring(0, x.length - 3);
+    if (otherNumbers !== "") lastThree = "," + lastThree;
+    var res =
+      otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") +
+      lastThree +
+      afterPoint;
+    setPaperMoney(res);
+  };
 
   return (
     <Box
@@ -58,7 +69,7 @@ function PaperTrade() {
           boxShadow: "0px 0px 10px 5px rgba(0,0,0,0.1)",
           transition: " all .15s ease-in-out",
         }}>
-        <BoxThree setPaperMoney={setPaperMoney} />
+        <BoxThree updateMoney={updateMoney} />
       </Card>
     </Box>
   );

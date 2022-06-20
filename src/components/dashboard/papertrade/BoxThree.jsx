@@ -4,7 +4,7 @@ import { BaseURL } from "../../../BaseURL";
 import { UserContext } from "../../../UserContext";
 import MyTable from "./MyTable";
 
-function BoxThree() {
+function BoxThree({ updateMoney }) {
   const { user } = useContext(UserContext);
   const current = JSON.parse(user);
   const [positions, setPositions] = useState(0);
@@ -27,6 +27,7 @@ function BoxThree() {
       .then((data) => {
         setData(data);
         setPositions(data.length);
+        updateMoney(100000 * data.length);
       })
       .catch((error) => {
         console.log(error);
@@ -62,7 +63,7 @@ function BoxThree() {
           Stocks given by the selected strategy will be shown here.
         </Typography>
       ) : (
-        <MyTable data={data} />
+        <MyTable data={data} updateMoney={updateMoney} />
       )}
     </>
   );
