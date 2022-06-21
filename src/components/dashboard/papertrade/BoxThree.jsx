@@ -3,15 +3,16 @@ import { Typography } from "@mui/material";
 import { BaseURL } from "../../../BaseURL";
 import { UserContext } from "../../../UserContext";
 import MyTable from "./MyTable";
+// import MyTable1 from "./MyTable1";
 
 function BoxThree({ updateMoney }) {
   const { user } = useContext(UserContext);
   const current = JSON.parse(user);
   const [positions, setPositions] = useState(0);
   const [data, setData] = useState([]);
-  console.log(data);
+  // console.log(data);
 
-  const getData = async () => {
+  const getData = () => {
     const request = { username: current.data.username };
     fetch(BaseURL + "api/get_trades/", {
       method: "POST",
@@ -64,6 +65,7 @@ function BoxThree({ updateMoney }) {
         </Typography>
       ) : (
         <MyTable data={data} updateMoney={updateMoney} />
+        // <MyTable1 data={data} updateMoney={updateMoney} />
       )}
     </>
   );
