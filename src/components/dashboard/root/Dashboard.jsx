@@ -202,7 +202,7 @@ function Dashboard() {
                   />
                 }
               />
-              <Route path="paperTrade" element={<PaperTrade />} />
+              <Route path="paperTrade/*" element={<PaperTrade />} />
               <Route path="portfolio" element={<Portfolio />} />
               <Route path="profile" element={<Profile />} />
 
