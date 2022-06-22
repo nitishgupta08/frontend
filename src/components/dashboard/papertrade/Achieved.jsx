@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Typography,
   TableContainer,
@@ -7,17 +7,24 @@ import {
   TableCell,
   TableRow,
   TableBody,
+  Box,
 } from "@mui/material";
 
-function Achieved({ achievedData }) {
+function Achieved({ achievedData, updateMoney }) {
   var [netPL, totalCharges, total] = updateTable(achievedData);
+  useEffect(() => {
+    updateMoney((achievedData.length * 100000 + total).toFixed(2));
+  }, [total, achievedData.length, updateMoney]);
   return (
     <>
-      <Typography
-        variant="subtitle"
-        sx={{ fontSize: "0.9rem", fontWeight: 400 }}>
-        Achieved Positions({achievedData.length})
-      </Typography>
+      <Box sx={{ m: 2 }}>
+        <Typography
+          variant="subtitle"
+          sx={{ fontSize: "1.2rem", fontWeight: 600 }}>
+          Achieved ({achievedData.length})
+        </Typography>
+      </Box>
+
       <TableContainer sx={{ mt: 2 }}>
         <Table>
           <TableHead>
@@ -120,12 +127,12 @@ function Achieved({ achievedData }) {
 const updateTable = (activeData) => {
   var turnover = 0;
   var stt = 0;
-  const turnoverArr = activeData.map((row, id) => {
+  const turnoverArr = activeData.map((row) => {
     turnover = (row.buy_price + row.sell_price) * row.quantity;
     return turnover;
   });
 
-  const sttprice = activeData.map((row, id) => {
+  const sttprice = activeData.map((row) => {
     stt = row.sell_price * row.quantity * 0.00025;
     return stt;
   });

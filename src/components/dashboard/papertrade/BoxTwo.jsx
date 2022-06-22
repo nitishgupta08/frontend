@@ -18,9 +18,9 @@ import { UserContext } from "../../../UserContext";
 function BoxTwo() {
   const [strategies, setStrategies] = useState([]);
   // dropdown states
-  const [strat, setStrat] = React.useState({ id: "", money: 0 });
+  const [strat, setStrat] = React.useState({ id: "" });
   const handleChange = (event) => {
-    setStrat({ ...strat, id: event.target.value });
+    setStrat({ id: event.target.value });
   };
 
   const { user } = useContext(UserContext);
@@ -32,6 +32,18 @@ function BoxTwo() {
     setTimeout(execPaperTrade, 3000, current, setOpen);
     setSubmit(!submit);
   };
+
+  // useEffect(() => {
+  //   const u = JSON.parse(localStorage.getItem("submit"));
+  //   const v = JSON.parse(localStorage.getItem("strat"));
+  //   setSubmit(u);
+  //   setStrat(v);
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem("submit", submit);
+  //   localStorage.setItem("strat", JSON.stringify(strat));
+  // }, [submit, strat]);
 
   const handleStop = () => {
     const request = { username: current.data.username };
@@ -102,6 +114,7 @@ function BoxTwo() {
               Strategy
             </InputLabel>
             <Select
+              defaultValue={""}
               sx={{ minWidth: 120 }}
               labelid="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"

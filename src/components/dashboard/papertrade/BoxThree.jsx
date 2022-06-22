@@ -15,14 +15,7 @@ const LinkTabs = styled((props) => (
     TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
   />
 ))({
-  marginTop: 20,
-  opacity: 1,
-  "& .MuiTabs-indicator": {
-    display: "none",
-  },
-  "& .MuiTabs-indicatorSpan": {
-    display: "none",
-  },
+  // marginTop: 20,
 });
 
 const LinkTab = styled((props) => (
@@ -38,8 +31,6 @@ const LinkTab = styled((props) => (
   color: "text.primary",
   marginBottom: 1,
   "&.Mui-selected": {
-    backgroundColor: "#874cf7",
-    color: "#fff",
     transition: "all .15s ease-in-out",
   },
   "&.Mui-focusVisible": {},
@@ -148,7 +139,9 @@ function BoxThree({ updateMoney }) {
           />
           <Route
             path="achieved"
-            element={<Achieved achievedData={achievedData} />}
+            element={
+              <Achieved achievedData={achievedData} updateMoney={updateMoney} />
+            }
           />
 
           <Route path="*" element={<Navigate to="active" />} />

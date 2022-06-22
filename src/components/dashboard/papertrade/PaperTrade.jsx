@@ -29,7 +29,8 @@ function PaperTrade() {
     <Box
       component="main"
       sx={{
-        p: 3,
+        pt: 3,
+        pr: 3,
         display: "flex",
         flexDirection: "column",
       }}>

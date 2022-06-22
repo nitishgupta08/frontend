@@ -8,6 +8,7 @@ import {
   TableCell,
   TableRow,
   TableBody,
+  Box,
 } from "@mui/material";
 import { UserContext } from "../../../UserContext";
 
@@ -76,11 +77,14 @@ function MyTable({ activeData, updateMoney }) {
 
   return (
     <>
-      <Typography
-        variant="subtitle"
-        sx={{ fontSize: "0.9rem", fontWeight: 400 }}>
-        Active Positions({activeData.length})
-      </Typography>
+      <Box sx={{ m: 2 }}>
+        <Typography
+          variant="subtitle"
+          sx={{ fontSize: "1.2rem", fontWeight: 600 }}>
+          Active ({activeData.length})
+        </Typography>
+      </Box>
+
       <TableContainer sx={{ mt: 2 }}>
         <Table>
           <TableHead>
@@ -187,7 +191,7 @@ function MyTable({ activeData, updateMoney }) {
               </TableRow>
             ))}
             <TableRow hover>
-              <TableCell colSpan={4} />
+              <TableCell colSpan={5} />
               <TableCell>
                 <Typography
                   variant="subtitle"
