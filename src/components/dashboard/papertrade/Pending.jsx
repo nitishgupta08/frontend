@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
-import { BaseURL } from "../../../BaseURL";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Typography,
   TableContainer,
@@ -9,6 +8,7 @@ import {
   TableRow,
   TableBody,
 } from "@mui/material";
+import { BaseURL } from "../../../BaseURL";
 import { UserContext } from "../../../UserContext";
 
 function compare(a, b) {
@@ -21,19 +21,20 @@ function compare(a, b) {
   return 0;
 }
 
-function MyTable({ activeData, updateMoney }) {
+function Pending({ pendingData, updateMoney }) {
   const { user } = useContext(UserContext);
   const current = JSON.parse(user);
-  activeData.sort(compare);
-  const [ltp, setLtp] = useState(Array(activeData.length).fill({ ltp: 0 }));
+  pendingData.sort(compare);
+  const [ltp, setLtp] = useState(Array(pendingData.length).fill({ ltp: 0 }));
   const [total, setTotal] = useState(0);
-  const [netPL, setNetPL] = useState(Array(activeData.length).fill(0));
+  const [netPL, setNetPL] = useState(Array(pendingData.length).fill(0));
   const [totalCharges, setTotalCharges] = useState(
-    Array(activeData.length).fill(0)
+    Array(pendingData.length).fill(0)
   );
+
   const getLTP = async () => {
     // setLtp(resize(ltp, 82, { ltp: 0 }));
-    const arr = activeData.map((item) => item.name);
+    const arr = pendingData.map((item) => item.name);
     const request = { instrument: arr };
     const response = await fetch(BaseURL + "api/get_ltp/", {
       method: "POST",
@@ -51,7 +52,7 @@ function MyTable({ activeData, updateMoney }) {
       });
     setLtp(response);
     var [netPL, totalCharges, total] = updateTable(
-      activeData,
+      pendingData,
       response,
       current
     );
@@ -68,15 +69,14 @@ function MyTable({ activeData, updateMoney }) {
     }, 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeData]);
+  }, [pendingData]);
 
   useEffect(() => {
-    updateMoney((activeData.length * 100000 + total).toFixed(2));
-  }, [activeData.length, total, updateMoney]);
-
+    updateMoney((pendingData.length * 100000 + total).toFixed(2));
+  }, [pendingData.length, total, updateMoney]);
   return (
     <>
-      {activeData.length === 0 ? (
+      {pendingData.length === 0 ? (
         <Typography
           variant="h1"
           sx={{
@@ -85,7 +85,7 @@ function MyTable({ activeData, updateMoney }) {
             m: 4,
             textAlign: "center",
           }}>
-          Stocks given by the selected strategy will be shown here.
+          Pending orders will be shown here.
         </Typography>
       ) : (
         <>
@@ -152,7 +152,7 @@ function MyTable({ activeData, updateMoney }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activeData.map((row, id) => (
+                {pendingData.map((row, id) => (
                   <TableRow key={row.id}>
                     {row.signal === "BUY" ? (
                       <TableCell sx={{ color: "green" }}>
@@ -166,14 +166,14 @@ function MyTable({ activeData, updateMoney }) {
                     <TableCell>{row.quantity}</TableCell>
                     <TableCell>
                       {row.buy_price === 0
-                        ? ltp.length !== activeData.length
+                        ? ltp.length !== pendingData.length
                           ? 0
                           : ltp[id].ltp
                         : row.buy_price}
                     </TableCell>
                     <TableCell>
                       {row.sell_price === 0
-                        ? ltp.length !== activeData.length
+                        ? ltp.length !== pendingData.length
                           ? 0
                           : ltp[id].ltp
                         : row.sell_price}
@@ -229,15 +229,13 @@ function MyTable({ activeData, updateMoney }) {
 }
 
 const updateTable = (activeData, ltp, current) => {
-  const updateActive = async (name, price, signal) => {
+  const updateActive = async (name) => {
     const request = {
       username: current.data.username,
       name: name,
-      price: price,
-      signal: signal,
     };
     console.log(request);
-    await fetch(BaseURL + "api/set_completed/", {
+    await fetch(BaseURL + "api/set_active/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(request),
@@ -309,19 +307,11 @@ const updateTable = (activeData, ltp, current) => {
   });
 
   activeData.forEach((row, id) => {
-    if (row.signal === "BUY") {
-      if (
-        ltp[id].ltp >= row.buy_price + row.target ||
-        ltp[id].ltp <= row.stop_loss
-      ) {
-        updateActive(row.name, ltp[id].ltp, row.signal);
-      }
+    if (row.signal === "BUY" && ltp[id].ltp >= row.buy_price) {
+      updateActive(row.name);
     } else {
-      if (
-        ltp[id].ltp <= row.sell_price - row.target ||
-        ltp[id].ltp >= row.stop_loss
-      ) {
-        updateActive(row.name, ltp[id].ltp, row.signal);
+      if (ltp[id].ltp <= row.sell_price) {
+        updateActive(row.name);
       }
     }
   });
@@ -329,4 +319,4 @@ const updateTable = (activeData, ltp, current) => {
   return [netPL, totalCharges, total];
 };
 
-export default MyTable;
+export default Pending;

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Typography, Tabs, Tab } from "@mui/material";
+import { Tabs, Tab } from "@mui/material";
 import { BaseURL } from "../../../BaseURL";
 import { UserContext } from "../../../UserContext";
 import { Routes, Route, Navigate, Link } from "react-router-dom";
 import Active from "./Active";
-import Achieved from "./Achieved";
+import History from "./History";
+import Pending from "./Pending";
 import { styled } from "@mui/material/styles";
-// import MyTable1 from "./MyTable1";
 
 const LinkTabs = styled((props) => (
   <Tabs
@@ -41,8 +41,12 @@ function BoxThree({ updateMoney }) {
   const current = JSON.parse(user);
   const [activeData, setActiveData] = useState([]);
   const [achievedData, setAchievedData] = useState([]);
+  const [pendingData, setPendingData] = useState([]);
+
   console.log(activeData);
   console.log(achievedData);
+  console.log(pendingData);
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -53,6 +57,7 @@ function BoxThree({ updateMoney }) {
     const request = {
       username: current.data.username,
       isCompleted: false,
+      isActive: true,
     };
     fetch(BaseURL + "api/get_trades/", {
       method: "POST",
@@ -78,6 +83,7 @@ function BoxThree({ updateMoney }) {
     const request = {
       username: current.data.username,
       isCompleted: true,
+      isActive: true,
     };
     fetch(BaseURL + "api/get_trades/", {
       method: "POST",
@@ -99,13 +105,41 @@ function BoxThree({ updateMoney }) {
       });
   };
 
+  const getPendingData = () => {
+    const request = {
+      username: current.data.username,
+      isCompleted: false,
+      isActive: false,
+    };
+    fetch(BaseURL + "api/get_trades/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    })
+      .then((response) => {
+        if (response.ok === true) return response.json();
+        else {
+          throw new Error();
+        }
+      })
+      .then((data) => {
+        setPendingData(data);
+        // updateMoney(100000 * activeData.length);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   //Fetching activeData and achievedData every 5 secs
   useEffect(() => {
     getActiveData();
     getAchievedData();
+    getPendingData();
     const interval = setInterval(() => {
       getActiveData();
       getAchievedData();
+      getPendingData();
     }, 5000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,39 +148,38 @@ function BoxThree({ updateMoney }) {
   return (
     <>
       <LinkTabs value={value} onChange={handleChange}>
-        <LinkTab pathname="active" label="Active Positions" />
-        <LinkTab pathname="achieved" label="Achieved Positions" />
+        <LinkTab
+          pathname="active"
+          label={"Active Positions (" + activeData.length + ")"}
+        />
+        <LinkTab
+          pathname="pending"
+          label={"Pending Orders (" + pendingData.length + ")"}
+        />
+        <LinkTab
+          pathname="history"
+          label={"Day's history (" + achievedData.length + ")"}
+        />
       </LinkTabs>
-
-      {activeData.length === 0 ? (
-        <Typography
-          variant="h1"
-          sx={{
-            fontSize: "1.3rem",
-            fontWeight: 600,
-            m: 4,
-            textAlign: "center",
-          }}>
-          Stocks given by the selected strategy will be shown here.
-        </Typography>
-      ) : (
-        <Routes>
-          <Route
-            path="active"
-            element={
-              <Active activeData={activeData} updateMoney={updateMoney} />
-            }
-          />
-          <Route
-            path="achieved"
-            element={
-              <Achieved achievedData={achievedData} updateMoney={updateMoney} />
-            }
-          />
-
-          <Route path="*" element={<Navigate to="active" />} />
-        </Routes>
-      )}
+      <Routes>
+        <Route
+          path="active"
+          element={<Active activeData={activeData} updateMoney={updateMoney} />}
+        />
+        <Route
+          path="pending"
+          element={
+            <Pending pendingData={pendingData} updateMoney={updateMoney} />
+          }
+        />
+        <Route
+          path="history"
+          element={
+            <History achievedData={achievedData} updateMoney={updateMoney} />
+          }
+        />
+        <Route path="*" element={<Navigate to="active" />} />
+      </Routes>
     </>
   );
 }
