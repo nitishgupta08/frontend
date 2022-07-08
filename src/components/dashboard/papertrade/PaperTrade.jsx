@@ -6,6 +6,7 @@ import BoxThree from "./BoxThree";
 
 function PaperTrade() {
   const [paperMoney, setPaperMoney] = useState(0);
+  const [submit, setSubmit] = useState(false);
 
   const updateMoney = (value) => {
     //https://stackoverflow.com/questions/16037165/displaying-a-number-in-indian-format-using-javascript
@@ -28,7 +29,7 @@ function PaperTrade() {
   return (
     <>
       <Grid container spacing={2} sx={{ mt: 1 }}>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <Card
             sx={{
               p: 2,
@@ -40,7 +41,7 @@ function PaperTrade() {
             <BoxOne paperMoney={paperMoney} />
           </Card>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={6}>
           <Card
             sx={{
               p: 2,
@@ -48,7 +49,7 @@ function PaperTrade() {
               boxShadow: "0px 0px 10px 5px rgba(0,0,0,0.1)",
               transition: " all .15s ease-in-out",
             }}>
-            <BoxTwo />
+            <BoxTwo submit={submit} setSubmit={setSubmit} />
           </Card>
         </Grid>
         <Grid item xs={12}>
@@ -60,7 +61,7 @@ function PaperTrade() {
               boxShadow: "0px 0px 10px 5px rgba(0,0,0,0.1)",
               transition: " all .15s ease-in-out",
             }}>
-            <BoxThree updateMoney={updateMoney} />
+            <BoxThree updateMoney={updateMoney} submit={submit} />
           </Card>
         </Grid>
       </Grid>

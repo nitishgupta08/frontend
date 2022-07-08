@@ -6,7 +6,7 @@ function BoxOne({ paperMoney }) {
       <Typography
         variant="subtitle"
         sx={{ fontSize: "0.9rem", fontWeight: 400 }}>
-        Net Paper Account Value
+        Paper Account Value
       </Typography>
       <Typography
         variant="h1"

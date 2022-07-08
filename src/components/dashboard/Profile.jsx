@@ -13,7 +13,7 @@ import SecurityIcon from "@mui/icons-material/Security";
 
 // https://avatars.dicebear.com/api/:sprites/:seed.svg
 
-function Profile() {
+function Profile({ img }) {
   const { user } = useContext(UserContext);
   const current = JSON.parse(user);
 
@@ -77,7 +77,7 @@ function Profile() {
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
           <Box
             component="img"
-            src={`https://avatars.dicebear.com/api/avataaars/${current.data.username}.svg`}
+            src={img}
             alt="profile"
             sx={{
               height: "100px",

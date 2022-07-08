@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Grid, Snackbar, Alert } from "@mui/material";
 import OptionsSettings from "./OptionsSettings";
 import OptionsTable from "./OptionsTable";
@@ -11,6 +11,7 @@ function OptionsData() {
   const [ltp, setltp] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [current, setCurrent] = useState("");
+
   const [filter, setFilter] = useState({
     iv: true,
     price: true,
@@ -24,8 +25,10 @@ function OptionsData() {
     setLoading(true);
     if (val === "") {
       setCurrent(stock);
+      localStorage.setItem("currentItem", stock);
       request = { symbol: stock, date: date };
     } else {
+      localStorage.setItem("currentItem", val);
       setCurrent(val);
       request = { symbol: val, date: date };
     }
@@ -46,12 +49,30 @@ function OptionsData() {
         date === "" ? setCurrentDate(data[1][0]) : setCurrentDate(date);
         setltp(Math.round(data[2][0].ltp));
         setLoading(false);
+        localStorage.setItem("data", JSON.stringify(data[0]));
+        localStorage.setItem("expiry", JSON.stringify(data[1]));
+        localStorage.setItem("ltp", Math.round(data[2][0].ltp));
       })
       .catch((error) => {
         setOpen(true);
         console.log(error);
       });
   };
+  const [local, setLocal] = useState(false);
+
+  const localClose = () => {
+    setLocal(false);
+  };
+
+  useEffect(() => {
+    if (data === null && localStorage.getItem("data")) {
+      setLocal(true);
+      setData(JSON.parse(localStorage.getItem("data")));
+      setExpiryDates(JSON.parse(localStorage.getItem("expiry")));
+      setltp(localStorage.getItem("ltp"));
+      setCurrent(localStorage.getItem("currentItem"));
+    }
+  }, [data]);
 
   const snackBarClose = () => {
     setOpen(false);
@@ -62,9 +83,18 @@ function OptionsData() {
         open={open}
         autoHideDuration={5000}
         onClose={snackBarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
         <Alert severity="error" variant="filled">
-          Internal Server Error. Please try again later
+          Internal Server Error. Please try again later!
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={local}
+        autoHideDuration={2000}
+        onClose={localClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+        <Alert severity="success" variant="filled">
+          Data restored from your local storage.
         </Alert>
       </Snackbar>
       <Grid container spacing={2} sx={{ mt: 1 }}>

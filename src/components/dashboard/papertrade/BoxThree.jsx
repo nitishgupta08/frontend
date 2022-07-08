@@ -30,6 +30,7 @@ const LinkTab = styled((props) => (
   borderRadius: 3,
   color: "text.primary",
   marginBottom: 1,
+  fontWeight: 600,
   "&.Mui-selected": {
     transition: "all .15s ease-in-out",
   },
@@ -39,51 +40,19 @@ const LinkTab = styled((props) => (
 function BoxThree({ updateMoney }) {
   const { user } = useContext(UserContext);
   const current = JSON.parse(user);
+
   const [activeData, setActiveData] = useState([]);
   const [achievedData, setAchievedData] = useState([]);
   const [pendingData, setPendingData] = useState([]);
-
-  console.log(activeData);
-  console.log(achievedData);
-  console.log(pendingData);
-
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const getActiveData = () => {
+  const getData = () => {
     const request = {
       username: current.data.username,
-      isCompleted: false,
-      isActive: true,
-    };
-    fetch(BaseURL + "api/get_trades/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    })
-      .then((response) => {
-        if (response.ok === true) return response.json();
-        else {
-          throw new Error();
-        }
-      })
-      .then((activeData) => {
-        setActiveData(activeData);
-        updateMoney(100000 * activeData.length);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getAchievedData = () => {
-    const request = {
-      username: current.data.username,
-      isCompleted: true,
-      isActive: true,
     };
     fetch(BaseURL + "api/get_trades/", {
       method: "POST",
@@ -97,52 +66,35 @@ function BoxThree({ updateMoney }) {
         }
       })
       .then((data) => {
-        setAchievedData(data);
-        // updateMoney(100000 * activeData.length);
+        setActiveData(
+          data.filter((a) => {
+            return a.isActive === true && a.isCompleted === false;
+          })
+        );
+        setPendingData(
+          data.filter((a) => {
+            return a.isActive === false;
+          })
+        );
+
+        setAchievedData(
+          data.filter((a) => {
+            return a.isCompleted === true;
+          })
+        );
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const getPendingData = () => {
-    const request = {
-      username: current.data.username,
-      isCompleted: false,
-      isActive: false,
-    };
-    fetch(BaseURL + "api/get_trades/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    })
-      .then((response) => {
-        if (response.ok === true) return response.json();
-        else {
-          throw new Error();
-        }
-      })
-      .then((data) => {
-        setPendingData(data);
-        // updateMoney(100000 * activeData.length);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  //Fetching activeData and achievedData every 5 secs
   useEffect(() => {
-    getActiveData();
-    getAchievedData();
-    getPendingData();
+    getData();
     const interval = setInterval(() => {
-      getActiveData();
-      getAchievedData();
-      getPendingData();
+      getData();
     }, 5000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, []);
 
   return (
