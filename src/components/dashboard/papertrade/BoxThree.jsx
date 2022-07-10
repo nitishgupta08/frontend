@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import { Tabs, Tab } from "@mui/material";
-import { BaseURL } from "../../../BaseURL";
-import { UserContext } from "../../../UserContext";
 import { Routes, Route, Navigate, Link } from "react-router-dom";
 import Active from "./Active";
 import History from "./History";
@@ -37,66 +35,14 @@ const LinkTab = styled((props) => (
   "&.Mui-focusVisible": {},
 }));
 
-function BoxThree({ updateMoney }) {
-  const { user } = useContext(UserContext);
-  const current = JSON.parse(user);
-
-  const [activeData, setActiveData] = useState([]);
-  const [achievedData, setAchievedData] = useState([]);
-  const [pendingData, setPendingData] = useState([]);
-  const [value, setValue] = useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const getData = () => {
-    const request = {
-      username: current.data.username,
-    };
-    fetch(BaseURL + "api/get_trades/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    })
-      .then((response) => {
-        if (response.ok === true) return response.json();
-        else {
-          throw new Error();
-        }
-      })
-      .then((data) => {
-        setActiveData(
-          data.filter((a) => {
-            return a.isActive === true && a.isCompleted === false;
-          })
-        );
-        setPendingData(
-          data.filter((a) => {
-            return a.isActive === false;
-          })
-        );
-
-        setAchievedData(
-          data.filter((a) => {
-            return a.isCompleted === true;
-          })
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getData();
-    const interval = setInterval(() => {
-      getData();
-    }, 5000);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line
-  }, []);
-
+function BoxThree({
+  achievedData,
+  activeData,
+  pendingData,
+  value,
+  handleChange,
+  total,
+}) {
   return (
     <>
       <LinkTabs value={value} onChange={handleChange}>
@@ -114,21 +60,11 @@ function BoxThree({ updateMoney }) {
         />
       </LinkTabs>
       <Routes>
-        <Route
-          path="active"
-          element={<Active activeData={activeData} updateMoney={updateMoney} />}
-        />
-        <Route
-          path="pending"
-          element={
-            <Pending pendingData={pendingData} updateMoney={updateMoney} />
-          }
-        />
+        <Route path="active" element={<Active activeData={activeData} />} />
+        <Route path="pending" element={<Pending pendingData={pendingData} />} />
         <Route
           path="history"
-          element={
-            <History achievedData={achievedData} updateMoney={updateMoney} />
-          }
+          element={<History achievedData={achievedData} total={total} />}
         />
         <Route path="*" element={<Navigate to="active" />} />
       </Routes>

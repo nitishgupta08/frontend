@@ -41,16 +41,17 @@ function OptionsTable({ data, ltp, filter }) {
   let temp = data && data.slice();
 
   //Call Side max and 2nd Max
-  if (temp !== null) {
+  if (data !== null) {
     temp.sort((a, b) => {
       if ("CE" in b && "CE" in a) {
         return b.CE.openInterest - a.CE.openInterest;
       }
       return 0;
     });
-    if ("CE" in temp[0] && "CE" in temp[1])
-      arr[0] = [temp[0].CE.openInterest, temp[1].CE.openInterest];
 
+    if ("CE" in temp[0] && "CE" in temp[1]) {
+      arr[0] = [temp[0].CE.openInterest, temp[1].CE.openInterest];
+    }
     temp.sort((a, b) => {
       if ("CE" in b && "CE" in a) {
         return b.CE.changeinOpenInterest - a.CE.changeinOpenInterest;

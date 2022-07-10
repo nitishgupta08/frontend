@@ -55,6 +55,7 @@ function OptionsData() {
       })
       .catch((error) => {
         setOpen(true);
+        setLoading(false);
         console.log(error);
       });
   };
@@ -83,7 +84,7 @@ function OptionsData() {
         open={open}
         autoHideDuration={5000}
         onClose={snackBarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
         <Alert severity="error" variant="filled">
           Internal Server Error. Please try again later!
         </Alert>
@@ -104,6 +105,7 @@ function OptionsData() {
               borderRadius: 3,
               boxShadow: "0px 0px 10px 5px rgba(0,0,0,0.1)",
               transition: " all .15s ease-in-out",
+              height: "325px",
               p: 2,
               ml: 3,
             }}>
@@ -124,6 +126,7 @@ function OptionsData() {
               boxShadow: "0px 0px 10px 5px rgba(0,0,0,0.1)",
               transition: " all .15s ease-in-out",
               p: 2,
+              height: "325px",
               ml: 1,
             }}>
             <CurrentDataCard ltp={ltp} current={current} />

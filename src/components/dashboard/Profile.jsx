@@ -17,10 +17,10 @@ function Profile({ img }) {
   const { user } = useContext(UserContext);
   const current = JSON.parse(user);
 
-  const [isDesktop, setDesktop] = useState(window.innerWidth <= 1024);
+  const [isDesktop, setDesktop] = useState(window.innerWidth <= 1200);
 
   const updateMedia = () => {
-    setDesktop(window.innerWidth <= 1024);
+    setDesktop(window.innerWidth <= 1200);
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function Profile({ img }) {
         backgroundColor: "background.default",
         height: "100vh",
       }}>
-      <Box sx={{ m: 5, display: "flex", justifyContent: "center" }}>
+      <Box sx={{ m: 1, mb: 3, display: "flex", justifyContent: "center" }}>
         <Typography
           variant="h1"
           style={{ wordWrap: "break-word" }}
@@ -135,7 +135,7 @@ function Profile({ img }) {
           boxShadow: "0px 0px 10px 5px rgba(0,0,0,0.1)",
           transition: " all .15s ease-in-out",
           p: 5,
-          mt: 5,
+          mt: 2,
         }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <SecurityIcon sx={{ mb: 1, opacity: 0.8 }} />

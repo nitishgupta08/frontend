@@ -4,7 +4,7 @@ import Sidebar from "../Sidebar";
 import Topbar from "../Topbar";
 import Strategies from "../strategies/Strategies";
 import PaperTrade from "../papertrade/PaperTrade";
-import Portfolio from "../Portfolio";
+import Portfolio from "../portfolio/Portfolio";
 import { UserContext } from "../../../UserContext";
 import Profile from "../Profile";
 import AliceInputs from "../strategies/AliceInputs";
@@ -92,10 +92,10 @@ function Dashboard() {
     }
   });
 
-  const [isTablet, setTablet] = useState(window.innerWidth <= 1024);
+  const [isTablet, setTablet] = useState(window.innerWidth <= 1200);
 
   const updateMedia = () => {
-    setTablet(window.innerWidth <= 1024);
+    setTablet(window.innerWidth <= 1200);
   };
 
   useEffect(() => {

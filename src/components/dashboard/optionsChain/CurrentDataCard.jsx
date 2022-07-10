@@ -18,7 +18,11 @@ function CurrentDataCard({ ltp, current }) {
           {current}
         </Typography>
         <Typography varient="h1" sx={{ fontSize: "6rem", fontWeight: "600" }}>
-          {ltp}
+          {ltp.toLocaleString("en-IN", {
+            maximumFractionDigits: 0,
+            style: "currency",
+            currency: "INR",
+          })}
         </Typography>
       </Box>
     </Box>
